@@ -49,6 +49,7 @@ static void CGContextAddPathWithRectCornerRadius(CGContextRef contextRef, CGRect
     UIFont      *_textFont;
     NSString    *_text;
     NSTimer     *_dismissTimer;
+    CGFloat     _lifeTime;
 }
 
 
@@ -83,6 +84,7 @@ static UDHud *_sharedInstance = nil;
         CGColorSpaceRelease(grayColorSpace);
         
 		_textFont = [[UIFont systemFontOfSize: 18] retain];
+        _lifeTime = 2.0f;
         
         [self setContentMode:UIViewContentModeRedraw];
     }
@@ -122,7 +124,7 @@ static UDHud *_sharedInstance = nil;
 
     // Schedule dismiss
     [_dismissTimer invalidate];
-    _dismissTimer = [NSTimer scheduledTimerWithTimeInterval:2.0f target:self selector:@selector(dismissAnimated) userInfo:nil repeats:NO];
+    _dismissTimer = [NSTimer scheduledTimerWithTimeInterval:_lifeTime target:self selector:@selector(dismissAnimated) userInfo:nil repeats:NO];
     
     // Add to window
     [self.layer removeAllAnimations];
@@ -190,4 +192,5 @@ static UDHud *_sharedInstance = nil;
 }
 
 
+@synthesize lifeTime=_lifeTime;
 @end
