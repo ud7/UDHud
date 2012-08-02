@@ -1,9 +1,25 @@
 //
 //  UDHud.m
 //
-//  Created by Rolandas Razma on 8/16/11.
-//  Copyright (c) 2011 UD7. All rights reserved.
+// Copyright (c) 2012 Rolandas Razma <rolandas@razma.lt>
 //
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
 
 #import "UDHud.h"
 #import <QuartzCore/QuartzCore.h>
@@ -63,10 +79,12 @@ static UDHud *_sharedInstance = nil;
 - (void)dealloc {
     CGColorRelease(_bazelColor);
     CGColorRelease(_backgroundColor);
+#if !__has_feature(objc_arc)
     [_textFont release];
     [_text release];
     [_image release];
     [super dealloc];
+#endif
 }
 
 
@@ -83,9 +101,13 @@ static UDHud *_sharedInstance = nil;
         _backgroundColor= CGColorCreate(grayColorSpace, (CGFloat[]){ 0.0f, 0.48f });
         CGColorSpaceRelease(grayColorSpace);
         
-		_textFont = [[UIFont systemFontOfSize: 18] retain];
+		_textFont = [UIFont systemFontOfSize: 18];
         _lifeTime = 2.0f;
         
+#if !__has_feature(objc_arc)
+        [_textFont retain];
+#endif
+
         [self setContentMode:UIViewContentModeRedraw];
     }
     return self;
@@ -108,11 +130,17 @@ static UDHud *_sharedInstance = nil;
 
 
 - (void)showWithText:(NSString *)text image:(UIImage *)image {
+#if !__has_feature(objc_arc)
     [_text release];
-    _text     = [text copy];
-    
     [_image release];
-    _image    = [image retain];
+#endif
+    
+    _text     = [text copy];
+    _image    = image;
+    
+#if !__has_feature(objc_arc)
+    [_image retain];
+#endif
     
     CGSize expectedSize = [_text sizeWithFont:_textFont];
     expectedSize = CGSizeMake(MAX(157, expectedSize.width +40), 150);
@@ -154,8 +182,13 @@ static UDHud *_sharedInstance = nil;
         [self removeFromSuperview];
         [self setAlpha:1.0f];
         
-        [_text release],  _text = nil;
-        [_image release], _image = nil;
+#if !__has_feature(objc_arc)
+        [_text release];
+        [_image release];
+#endif
+        
+        _text = nil;
+        _image = nil;
     }
 }
 
