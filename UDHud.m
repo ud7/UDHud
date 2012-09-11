@@ -132,15 +132,11 @@ static UDHud *_sharedInstance = nil;
 - (void)showWithText:(NSString *)text image:(UIImage *)image {
 #if !__has_feature(objc_arc)
     [_text release];
-    [_image release];
 #endif
     
-    _text     = [text copy];
-    _image    = image;
+    _text = [text copy];
     
-#if !__has_feature(objc_arc)
-    [_image retain];
-#endif
+    [self setImage:image];
     
     CGSize expectedSize = [_text sizeWithFont:_textFont];
     expectedSize = CGSizeMake(MAX(157, expectedSize.width +40), 150);
@@ -159,6 +155,21 @@ static UDHud *_sharedInstance = nil;
     [self setAlpha:1.0f];
     [self setNeedsDisplay];
     [window addSubview: self];
+}
+
+
+- (void)setImage:(UIImage *)image {
+#if !__has_feature(objc_arc)
+    [_image release];
+#endif
+
+    _image    = image;
+    
+#if !__has_feature(objc_arc)
+    [_image retain];
+#endif
+    
+    [self setNeedsDisplay];
 }
 
 
