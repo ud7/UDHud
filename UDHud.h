@@ -31,9 +31,9 @@
 @interface UDHud : UIView
 
 @property (readwrite, assign) CGFloat lifeTime;
+@property (readwrite, retain) UIImage *image;
 
 + (UDHud *)sharedInstance;
 - (void)showWithText:(NSString *)text image:(UIImage *)image;   // max image size is 65x51
-- (void)setImage:(UIImage *)image;
 
 @end

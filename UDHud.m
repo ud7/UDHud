@@ -236,5 +236,5 @@ static UDHud *_sharedInstance = nil;
 }
 
 
-@synthesize lifeTime=_lifeTime;
+@synthesize lifeTime=_lifeTime, image=_image;
 @end
