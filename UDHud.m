@@ -217,7 +217,7 @@ static UDHud *_sharedInstance = nil;
     CGContextDrawPath(contextRef, kCGPathFill);
     
     // Draw bazel
-    CGRect bazelRect = CGRectMake(roundf((rect.size.width -81) /2), 32, 81, 67);
+    CGRect bazelRect = CGRectMake(roundf((rect.size.width -82) /2), 32, 82, 68);
     CGContextSetLineWidth(contextRef, 5);    
     CGContextSetStrokeColorWithColor(contextRef, _bazelColor);
     CGContextAddPathWithRectCornerRadius(contextRef, bazelRect, 8);

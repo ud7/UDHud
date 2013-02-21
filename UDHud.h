@@ -34,6 +34,6 @@
 @property (nonatomic, readwrite, retain) UIImage *image;
 
 + (UDHud *)sharedInstance;
-- (void)showWithText:(NSString *)text image:(UIImage *)image;   // max image size is 65x51
+- (void)showWithText:(NSString *)text image:(UIImage *)image;   // max image size is 66x52
 
 @end
