@@ -77,6 +77,8 @@ static UDHud *_sharedInstance = nil;
 
 
 - (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
     CGColorRelease(_bazelColor);
     CGColorRelease(_backgroundColor);
 #if !__has_feature(objc_arc)
@@ -155,6 +157,15 @@ static UDHud *_sharedInstance = nil;
     [self setAlpha:1.0f];
     [self setNeedsDisplay];
     [window addSubview: self];
+    
+    [self setTransformForCurrentOrientation:NO];
+    
+    // Start listening for oriantation notifications
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+	[[NSNotificationCenter defaultCenter] addObserver: self
+                                             selector: @selector(deviceOrientationDidChangeNotification)
+                                                 name: UIDeviceOrientationDidChangeNotification
+                                               object: nil];
 }
 
 
@@ -175,6 +186,8 @@ static UDHud *_sharedInstance = nil;
 
 - (void)dismissAnimated {
     [_dismissTimer invalidate], _dismissTimer = nil;
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationDuration:0.33f];
@@ -201,6 +214,45 @@ static UDHud *_sharedInstance = nil;
         _text = nil;
         _image = nil;
     }
+}
+
+
+- (void)setTransformForCurrentOrientation:(BOOL)animated {
+
+    
+    if ( animated ) {
+		[UIView beginAnimations:nil context:nil];
+        [UIView setAnimationDuration: (( UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad )?0.8f:0.6f)];
+	}
+    
+    switch ( [UIApplication sharedApplication].statusBarOrientation ) {
+        case UIInterfaceOrientationPortrait:{
+            [self setTransform: CGAffineTransformMakeRotation(0.0f)];
+            break;
+        }
+        case UIInterfaceOrientationPortraitUpsideDown:{
+            [self setTransform: CGAffineTransformMakeRotation((float)M_PI)];
+            break;
+        }
+        case UIInterfaceOrientationLandscapeLeft:{
+            [self setTransform: CGAffineTransformMakeRotation(-(float)M_PI_2)];
+            break;
+        }
+        case UIInterfaceOrientationLandscapeRight:{
+            [self setTransform: CGAffineTransformMakeRotation((float)M_PI_2)];
+            break;
+        }
+    }
+    
+    if ( animated ) {
+		[UIView commitAnimations];
+	}
+
+}
+
+
+- (void)deviceOrientationDidChangeNotification {
+    [self setTransformForCurrentOrientation:YES];
 }
 
 
@@ -233,6 +285,16 @@ static UDHud *_sharedInstance = nil;
              withFont: _textFont
         lineBreakMode: UILineBreakModeClip
             alignment: UITextAlignmentCenter];
+}
+
+
+#pragma mark -
+#pragma mark UIView
+
+
+- (void)didMoveToWindow {
+	// We need to take care of rotation ourselfs if we're adding the HUD to a window
+    [self setTransformForCurrentOrientation:NO];
 }
 
 
