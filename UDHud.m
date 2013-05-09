@@ -141,11 +141,12 @@ static UDHud *_sharedInstance = nil;
     [self setImage:image];
     
     CGSize expectedSize = [_text sizeWithFont:_textFont];
-    expectedSize = CGSizeMake(MAX(157, expectedSize.width +40), 150);
+    expectedSize = CGSizeMake(MAX(158, expectedSize.width +40), 150);
     
     UIWindow *window = [[UIApplication sharedApplication] keyWindow];
     
     CGPoint center = CGPointMake(floorf((window.bounds.size.width -expectedSize.width) /2), floorf((window.bounds.size.height -expectedSize.height) /2));
+    [self setTransform:CGAffineTransformIdentity];
     [self setFrame:CGRectMake(center.x, center.y, expectedSize.width, expectedSize.height)];
 
     // Schedule dismiss
@@ -219,7 +220,6 @@ static UDHud *_sharedInstance = nil;
 
 - (void)setTransformForCurrentOrientation:(BOOL)animated {
 
-    
     if ( animated ) {
 		[UIView beginAnimations:nil context:nil];
         [UIView setAnimationDuration: (( UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad )?0.8f:0.6f)];
@@ -261,6 +261,7 @@ static UDHud *_sharedInstance = nil;
 
 
 - (void)drawRect:(CGRect)rect {
+
     CGContextRef contextRef = UIGraphicsGetCurrentContext();
 
     // Draw background
