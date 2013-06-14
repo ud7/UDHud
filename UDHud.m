@@ -284,8 +284,8 @@ static UDHud *_sharedInstance = nil;
     CGContextSetFillColorWithColor(contextRef, _bazelColor);
     [_text drawInRect: CGRectMake(20, rect.size.height -40, rect.size.width -40, 20) 
              withFont: _textFont
-        lineBreakMode: UILineBreakModeClip
-            alignment: UITextAlignmentCenter];
+        lineBreakMode: NSLineBreakByClipping
+            alignment: NSTextAlignmentCenter];
 }
 
 
