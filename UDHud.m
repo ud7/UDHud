@@ -141,7 +141,7 @@ static UDHud *_sharedInstance = nil;
     [self setImage:image];
     
     CGSize expectedSize = [_text sizeWithFont:_textFont];
-    expectedSize = CGSizeMake(MAX(158, expectedSize.width +40), 150);
+    expectedSize = CGSizeMake(MAX(158, ceilf(expectedSize.width +40)), 150);
     
     UIWindow *window = [[UIApplication sharedApplication] keyWindow];
     
